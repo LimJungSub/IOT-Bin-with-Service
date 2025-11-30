@@ -5,15 +5,15 @@
 #define CONVERT_G_TO_MS2    9.80665f
 #define MAX_ACCEPTED_RANGE  2.0f        // 가속도 센서 범위
 
-static bool debug_nn = false; // true로 하면 시리얼 모니터에 자세한 로그 출력
+static bool debug_nn = false; // true로 하면 AI모델에서 시리얼 모니터에 자세한 로그 출력
 
 void setup()
 {
     // PC와 통신할 속도
-    Serial.begin(115200);
+    Serial.begin(9600);
     
     // ESP32와 통신할 UART 시리얼 (Pin 0, 1) 속도
-    //Serial1.begin(9600); 
+    Serial1.begin(9600); 
 
     Serial.println("Edge Impulse Inferencing Demo");
 
@@ -100,11 +100,10 @@ void loop()
     // 조건: 'moving' 점수가 0.7 이상이면 -> MOVING
     //       나머지(점수가 낮거나, noising, stopping이 높은 경우) -> STOPPED
     if (movingScore >= 0.7) {
-        Serial.println(">> [UART] Sent: MOVING"); 
-        // Serial1.println("MOVING");       // ESP32로 전송
+        Serial.println("[uart sent] current status >> MOVING"); 
+        Serial1.println("MOVING");       // ESP32로 전송
     } else {
-        Serial.println(">> [UART] Sent: STOPPED"); 
-        // Serial1.println("STOPPED");      // ESP32로 전송
+        Serial.println("[uart not sent] current state >> STOPPED"); 
     }
     
     Serial.println("----------------------------------");
