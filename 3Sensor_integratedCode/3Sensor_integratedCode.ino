@@ -170,11 +170,36 @@ void loop() {
     float currentWeight = scale.is_ready() ? scale.get_units(1) : 0.0;
     // 수위 센서로부터 수위값을 읽기
     int currentWaterLevel = analogRead(WATER_SENSOR_PIN);
+
+    //====================================================================
+    //                      쓰레기 수거 필요 판단 로직 
+    bool needCollection = false;
+    String reason = "";
+
+    if (latestDistance > 0 && latestDistance <= 100) {
+        needCollection = true;
+        reason = "Distance <= 100mm (Trash Full)";
+    }
+    else if (currentWeight >= 200.0) {
+        needCollection = true;
+        reason = "Weight >= 200g (Too Heavy)";
+    }
+
+    else if (currentWaterLevel >= 500) { 
+        needCollection = true;
+        reason = "Water Level >= 30mm (Liquid Warning)";
+    }
+    if (needCollection) {
+        Serial.print("[Collection Needed] ");
+        Serial.println(reason);
+    }
+    // ====================================================================
     
     StaticJsonDocument<256> doc;
     doc["distance_mm"] = latestDistance;
     doc["weight_g"] = currentWeight;
     doc["water_adc"] = currentWaterLevel;
+    doc["need_collection"] = needCollection;
     
     char jsonBuffer[256];
     serializeJson(doc, jsonBuffer);
