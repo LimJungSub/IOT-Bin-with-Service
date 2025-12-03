@@ -12,7 +12,7 @@ void setup()
     Serial.begin(9600);
     
     // ESP32와 통신할 UART 시리얼 (Pin 0, 1) 속도
-    // Serial1.begin(9600); 
+    Serial1.begin(9600); 
 
     // Serial.println("Edge Impulse Inferencing Demo");
 
@@ -100,7 +100,7 @@ void loop()
     //       나머지(점수가 낮거나, noising, stopping이 높은 경우) -> STOPPED
     if (movingScore >= 0.7) {
         Serial.println("[uart sent] current status >> MOVING"); 
-        // Serial1.println("MOVING");       // ESP32로 전송
+        Serial1.println("MOVING");       // ESP32로 전송
     } else {
         Serial.println("[uart not sent] current state >> STOPPED"); 
     }
